@@ -12,18 +12,17 @@
 
  # Expected Output
  ![image](https://user-images.githubusercontent.com/89527573/175477722-9f828ac7-d4e6-4585-b7d2-df926c4975fd.png)
+![image](https://user-images.githubusercontent.com/89527573/175569469-7c75257e-8e46-4b75-a559-d3c216dc78e5.png)
 
-
- ## Filling Sparse Matrix
- ---
  
- ### Basic Idea
+ ### Basic Idea LF
  ---
- ![image](https://user-images.githubusercontent.com/89527573/175478522-d181abbb-4cab-41b1-aa18-865a202f1f25.png)
- ![image](https://user-images.githubusercontent.com/89527573/175478383-cb639ce5-7883-4f6c-8496-078bfd2741f5.png)
- ![image](https://user-images.githubusercontent.com/89527573/175478584-615a7373-f882-40ab-87ae-c3c54de23d7a.png)
- ![image](https://user-images.githubusercontent.com/89527573/175478656-874b9608-9007-47dc-90dd-6c8eba26fffb.png)
- ![image](https://user-images.githubusercontent.com/89527573/175478712-7ad48e01-4fc3-4ad2-95d7-e4037c39c07e.png)
+![image](https://user-images.githubusercontent.com/89527573/175571003-6a6b8515-e810-4932-99fe-462c7184639f.png)
+
+![image](https://user-images.githubusercontent.com/89527573/175568983-9cf83634-9f79-46ec-9f86-81561c90ed13.png)
+
+![image](https://user-images.githubusercontent.com/89527573/175570262-4b5ea057-9a18-4a70-9450-47dfa146753b.png)
+![image](https://user-images.githubusercontent.com/89527573/175570335-32737c4f-e58e-415c-a91f-21f0740c942f.png)
 
 #### Measure Similarity using Fragrance Features Table
 ---
