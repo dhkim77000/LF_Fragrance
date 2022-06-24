@@ -1,0 +1,58 @@
+{
+  "img_url": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[1]/div[1]/div/div/img",
+
+  "accord_grid": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[1]/div[2]/div",
+  "accord_bar_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[1]/div[2]/div/div[",
+  "accord_bar_b": "]/div",
+
+  "review_grid": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[1]/div",
+  "review_emotion_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[1]/div/div[",
+  "review_emotion_b": "]/div[2]/span",
+
+  "review_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[1]/div/div[",
+  "review_score_b": "]/div[3]/div/div",
+
+  "season_grid": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[2]/div",
+  "season_text_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[2]/div/div[",
+  "season_text_b": "]/div[2]/span",
+  "season_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[2]/div/div[",
+  "season_score_b": "]/div[3]/div/div",
+
+  "notes_grid": "//*[@id=\"pyramid\"]/div[1]/div/div[2]",
+  "top_notes_num": "//*[@id=\"pyramid\"]/div[1]/div/div[2]/div[3]/div",
+  "middle_notes_num": "//*[@id=\"pyramid\"]/div[1]/div/div[2]/div[4]/div",
+  "base_notes_num": "//*[@id=\"pyramid\"]/div[1]/div/div[2]/div[5]/div",
+
+  "top_note_f": "//*[@id=\"pyramid\"]/div[1]/div/div[2]/div[3]/div/div[",
+  "top_note_b": " ]/div[2]",
+
+  "middle_note_f": "//*[@id=\"pyramid\"]/div[1]/div/div[2]/div[4]/div/div[",
+  "middle_note_b": "]/div[2]",
+
+  "base_note_f": "//*[@id=\"pyramid\"]/div[1]/div/div[2]/div[5]/div/div[",
+  "base_note_b": "]/div[2]",
+
+  "rating_score": "/*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[3]/div/p[1]/span[1]",
+  "rating_num": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[3]/div/p[1]/span[3]",
+
+  "perfumer": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[3]/div[2]/div/a",
+  
+  "property_grid": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div",
+
+  "longevity_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div/div[4]/div/div[3]/div[",
+  "longevity_score_b": "]/div[2]/span",
+
+  "longevity_count_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[8]/div/div[5]/div/div[3]/div[",
+  "longevity_count_b": "]/div[2]/span",
+
+
+  "sillage_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div/div[5]/div/div[3]/div[",
+  "sillage_score_b": "]/div[2]/span",
+
+  "gender_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div/div[7]/div/div[3]/div[",
+  "gender_score_b": "]/div[2]/span",
+
+  "pricevalue_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div/div[8]/div/div[3]/div[",
+  "pricevalue_score_b": "]/div[2]/span"
+
+}
