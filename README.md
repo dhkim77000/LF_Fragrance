@@ -24,19 +24,6 @@
 ![image](https://user-images.githubusercontent.com/89527573/175570262-4b5ea057-9a18-4a70-9450-47dfa146753b.png)
 ![image](https://user-images.githubusercontent.com/89527573/175570335-32737c4f-e58e-415c-a91f-21f0740c942f.png)
 
-#### Measure Similarity using Fragrance Features Table
----
-![image](https://user-images.githubusercontent.com/89527573/175478883-8de8dd00-8a43-4586-8347-1b157df77975.png)
-
-#### Adjusted Output
----
-![image](https://user-images.githubusercontent.com/89527573/175479136-9d63204c-8c41-4a89-bf70-f370bcd9e9ef.png)
-
-#### Expected Result
----
-![image](https://user-images.githubusercontent.com/89527573/175479250-24dd1924-93b8-46fe-86ae-7c9d461e8473.png)
-
-
 
 
 
