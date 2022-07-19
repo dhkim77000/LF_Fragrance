@@ -52,6 +52,7 @@ def Fragrance_crawler(url_data, brand_url,brand_name):
         try:
             driver.set_window_size(1920, 1080)
             driver.get(country_url)
+            
             WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, '//*[@id="main-content"]/div[1]/div[1]/div[2]')))
             WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, '//*[@id="main-content"]/div[1]/div[1]/div[2]')))
             brand_grid = driver.find_element(by = By.XPATH, value = '//*[@id="main-content"]/div[1]/div[1]/div[2]')
@@ -64,7 +65,7 @@ def Fragrance_crawler(url_data, brand_url,brand_name):
                     b_xpath_b = ']/a'
                 
                     xpath = b_xpath_f + str(i) + b_xpath_b 
-
+                    WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, xpath)))
                     brand = driver.find_element(by = By.XPATH, value = xpath)
                     brand_name = brand.get_attribute("textContent").strip('\n')
                     brand_url = brand.get_attribute('href')
@@ -87,7 +88,8 @@ def Fragrance_crawler(url_data, brand_url,brand_name):
                 except NoSuchElementException:
                     continue
             data.to_csv('/home/dhkim/Fragrance/data/data.csv')
-        except TimeoutException:
+        except Exception as e:
+            print(e)
             failed_country_list.append(country_url)
             continue
 
@@ -138,7 +140,7 @@ def brand_driver(brand_url,brand_name):
                 continue
 
         num = len(url_list)
-    except TimeoutException:
+    except Exception:
         print('---------------'+brand_name+'---------------')
         return None, None, None
     driver.quit()
@@ -156,7 +158,7 @@ if __name__ == '__main__':
     chrome_options.add_argument('--disable-setuid-sandbox')
     #chrome_options.add_argument('--remote-debugging-port=9222')
     chrome_options.add_argument('--disable-dev-shm-usage')
-    #chrome_options.add_argument('--user-data-dir=/home/dhkim/chrome_data/')
+
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument('--incognito')
     mobile_emulation = { "deviceName" : "iPhone X" }
@@ -178,8 +180,8 @@ if __name__ == '__main__':
     chrome_path = "/home/dhkim/chromedriver"
 
 
-    url = pd.read_csv('/home/dhkim/Fragrance/country_url.csv')
-    url = url['Country']
+    url = pd.read_csv('/home/dhkim/Fragrance/failed_country.csv')
+    url = url['0']
     data, failed_country_list, failed_fragrance_list= Fragrance_crawler(url,chrome_path,chrome_options)
     failed_country_list = pd.DataFrame(failed_country_list)
     failed_country_list.to_csv('/home/dhkim/Fragrance/failed_country.csv')

@@ -32,27 +32,20 @@
   "base_note_f": "//*[@id=\"pyramid\"]/div[1]/div/div[2]/div[5]/div/div[",
   "base_note_b": "]/div[2]",
 
+  "rating_grid": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[3]",
   "rating_score": "/*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[3]/div/p[1]/span[1]",
   "rating_num": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[4]/div[3]/div/p[1]/span[3]",
 
   "perfumer": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[3]/div[2]/div/a",
-  
-  "property_grid": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div",
 
-  "longevity_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div/div[4]/div/div[3]/div[",
-  "longevity_score_b": "]/div[2]/span",
-
-  "longevity_count_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[8]/div/div[5]/div/div[3]/div[",
-  "longevity_count_b": "]/div[2]/span",
+  "property_grid_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[",
+  "property_grid_b": "]/div",
 
 
-  "sillage_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div/div[5]/div/div[3]/div[",
-  "sillage_score_b": "]/div[2]/span",
+  "property_mid": "/div[",
+  "property_text": "]/div/div[1]/span",
 
-  "gender_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div/div[7]/div/div[3]/div[",
-  "gender_score_b": "]/div[2]/span",
-
-  "pricevalue_score_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[7]/div/div[8]/div/div[3]/div[",
-  "pricevalue_score_b": "]/div[2]/span"
+  "score_f": "]/div/div[3]/div[ ",
+  "score_b": " ]/div[2]/span"
 
 }

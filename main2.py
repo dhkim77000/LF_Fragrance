@@ -30,7 +30,8 @@ import json
 def accord_element(driver, xpath_data):
     text = []
     ratio = []
-    pdb.set_trace()
+   
+    p = re.compile('(?<=width: ).*')
     try:
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH,xpath_data['accord_grid'])))
         WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, xpath_data['accord_grid'])))
@@ -47,70 +48,53 @@ def accord_element(driver, xpath_data):
                 accord = driver.find_element(by = By.XPATH, value = xpath)
                 accord_text = accord.get_attribute("textContent")
                 accord_score = accord.get_attribute("style")
-                print(accord_text)
+                accord_score = p.findall(accord_score)[0].strip(';').strip('%')
+           
                 text.append(accord_text)
-                ration.append(accord_score)
-
+                ratio.append(accord_score)
+    
             except NoSuchElementException:
                 continue
-
+      
         return text, ratio
     except TimeoutException:
         return None, None
     
 
-def review_element(driver, xpath_data):
-    score = []
-    ratio = []
-    pdb.set_trace()
-    try:
-        WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH,xpath_data['review_grid'])))
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, xpath_data['review_grid'])))
-
-        for i in range(1,6):
-            try:
-                xpath_f = xpath_data['review_score_f']
-                xpath_b = xpath_data['review_score_b']
-                xpath = xpath_f + str(i) + xpath_b
-                
-                review_score = driver.find_element(by = By.XPATH, value = xpath)
-                bar = review_score.get_attribute("style")
-       
-                score.append(6-i)
-                ratio.append(ratio)
-
-            except NoSuchElementException:
-                continue
-
-        return score, ratio
-    except TimeoutException:
-        return None, None
-
 def season_element(driver, xpath_data):
 
     ratio = []
-    pdb.set_trace()
     season = ['winter','spring','summer','fall','day','night']
+    p = re.compile('(?<=width: ).*')
+
     try:
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH,xpath_data['season_grid'])))
         WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, xpath_data['season_grid'])))
         for i in range(1,7):
             try:
+                #pdb.set_trace()
                 xpath_f = xpath_data['season_score_f']
                 xpath_b = xpath_data['season_score_b']
                 xpath = xpath_f+ str(i) + xpath_b
                 
                 season_score = driver.find_element(by = By.XPATH, value = xpath)
                 bar = season_score.get_attribute("style")
-
-                ratio.append(ratio)
+                bar = p.findall(bar)[0].strip(';').strip(' ')
+                bar = list(bar)
+                cut = bar.index('%')
+                bar = bar[:cut]
+                bar = "".join(bar)
+            
+                ratio.append(bar)
 
             except NoSuchElementException:
                 continue
 
-        return season, ratio
-    except TimeoutException:
-        return None, None
+        return ratio
+        
+    except Exception as e:
+        print(e)
+        return None
 
 def note_element(driver, xpath_data):
 
@@ -121,26 +105,26 @@ def note_element(driver, xpath_data):
         try: ## top
             top_notes = driver.find_element(by = By.XPATH, value = xpath_data['top_notes_num'])
             t_num = len(top_notes.find_elements(by = By.TAG_NAME, value = 'div'))
-            top_note = notes_finder(driver, xpath_data, num, 'top')
+            top_note = notes_finder(driver, xpath_data, t_num, 'top')
             
 
         except NoSuchElementException:
-            continue
+            top_note = None
 
         try: ## middle
             middle_notes = driver.find_element(by = By.XPATH, value = xpath_data['middle_notes_num'])
             m_num = len(top_notes.find_elements(by = By.TAG_NAME, value = 'div'))
-            mid_note = notes_finder(driver, xpath_data, num, 'middle')
+            mid_note = notes_finder(driver, xpath_data, m_num, 'middle')
 
         except NoSuchElementException:
-            continue
+            mid_note = None
 
         try: ## base
             base_notes = driver.find_element(by = By.XPATH, value = xpath_data['base_notes_num'])
             b_num = len(top_notes.find_elements(by = By.TAG_NAME, value = 'div'))
-            base_note = notes_finder(driver, xpath_data, num, 'base')
+            base_note = notes_finder(driver, xpath_data, b_num, 'base')
         except NoSuchElementException:
-            continue
+            base_note = None
             
         return top_note, mid_note, base_note
 
@@ -164,80 +148,156 @@ def notes_finder(driver, xpath_data, num, type):
     return notes
 
 def rating_element(driver, xpath_data):
-
+    
     try:
-        WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH,xpath_data['rating_score'])))
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, xpath_data['rating_num'])))
+        WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH,xpath_data['rating_grid'])))
 
         try:
-    
+       
             rating_score = driver.find_element(by = By.XPATH, value = xpath_data['rating_score'])
             rating_num = driver.find_element(by = By.XPATH, value = xpath_data['rating_num'])
             
             rating_score = rating_score.get_attribute("textContent")
             rating_num = rating_num.get_attribute("textContent")
+            return rating_score, rating_num
 
         except NoSuchElementException:
-            continue
+            return None, None
 
-        return rating_score, rating_num
+        
     except TimeoutException:
         return None, None
 
-def information_crawler(data, xpath_data,chrome_path,chrome_options):
-    data = range(2)
-    for fragrance in tqdm(data):
-
-        #brand = fragrance['Brand']
-        #fr_name = fragrance['Fragrance']
-        #url = fragrance['Url']
-        url = 'https://www.fragrantica.com/perfume/Hermes/Terre-d-Hermes-17.html'
-
+def property_element(driver, xpath_data, property):
+    for i in [7,8,9]:
         try:
-            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-            driver.set_window_size(1920, 1080)
-            driver.get(url)
+            WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH,xpath_data['property_grid'])))
+            WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, xpath_data['property_grid'])))
+
+            xpath_f = xpath_data['property_grid_f']
+            xpath_b = xpath_data['property_grid_b']
+            xpath = xpath_f + str(i) + xpath_b
+
+            grid = driver.find_element(by = By.XPATH, value = xpath).get_attribute("class")
+
+            if grid == 'grid-x grid-padding-x grid-padding-y':
+                count = property_finder(driver,xpath_data, property, xpath)
         
-            accord_text, accord_ratio = accord_element(driver, xpath_data)
-            return 
+        except Exception:
+            return None
 
-            
-        
+def property_finder(driver,xpath_data, property, grid_path):
 
+    for i in range(1,15):
+        try:
+            text_path = grid_path + xpath_data['property_mid'] + str(i) + xpath_data['property_text']
+            found_property = driver.find_element(by = By.XPATH, value = xpath).get_attribute("textContent")
 
-        except IndexError:
-            failed_country_list.append(country_url)
+            if property == found_property:
+                if property == 'SILLAGE': ## -2 -1 1 2
+                    count = property_score(driver,xpath_data, grid_path, i, 4)
 
-        driver.quit()
-    return data, failed_country_list, failed_fragrance_list
+                elif property == 'GENDER': ##-1 -2 0 2 1 ---- negative female positive male
+                    count = property_score(driver,xpath_data, grid_path, i, 4)
 
-def property_element(driver, xpath_data):
+                else:   ## -2 -1 0 1 2
+                    count = property_score(driver,xpath_data, grid_path, i, 4)
 
+            else:
+                continue
+        except Exception:
+            return None
+
+    return count
+
+def property_score(driver,xpath_data, grid_path, property_index, num):
+    count = []
+    for i in range(1, num+1):
+        try:
+            score_path = grid_path + str(property_index) + xpath_data['score+f'] + str(i) + xpath_data['score_b']
+            score = driver.find_element(by = By.XPATH, value = score_path).get_attribute("textContent")
+            count.append(score)
+        except Exception:
+            continue
+    return count
+    
+def img_finder(driver,xpath_data):
 
     try:
-        WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH,xpath_data['property_grid'])))
-        WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, xpath_data['property_grid'])))
+        WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, xpath_data['img_url'])))
+        url = driver.find_element(by = By.XPATH, value = xpath_data['img_url'])
+        url = url.get_attribute('src')
+        return url  
+    except Exception:
+        return None
 
-        for i in [4,5,7,8]:
-            try:
-                xpath_f = xpath_data['season_score_f']
-                xpath_b = xpath_data['season_score_b']
-                xpath = xpath_f+ str(i) + xpath_b
-                
-                season_score = driver.find_element(by = By.XPATH, value = xpath)
-                bar = season_score.get_attribute("style")
+def perfumer_finder(driver,xpath_data):
+    try:
+        WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, xpath_data['perfumer'])))
+        perfumer = driver.find_element(by = By.XPATH, value = xpath_data['perfumer']).get_attribute("textContent")
+        return perfumer
+    except Exception:
+        return perfumer
 
-                ratio.append(ratio)
 
-            except NoSuchElementException:
-                continue
+def information_crawler(data, xpath_data,chrome_path,write_data,chrome_options):
 
-        return season, ratio
-    except TimeoutException:
-        return None, None
-
-def property_finder(driver, xpath_data, type):
+    failed_fragrance =[]
+    result = []
+    for i in tqdm(list(data.index.values)):
+     
+        brand = data.loc[i,'Brand']
+        fr_name = data.loc[i,'Fragrance']
+        url = data.loc[i,'Url']
+ 
+        try:
+            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+            driver.get(url)
+       
+            img_url = img_finder(driver,xpath_data)
     
+            #pdb.set_trace()
+            #accord_text, accord_ratio = accord_element(driver, xpath_data)
+            
+            #rating, rating_count = rating_element(driver, xpath_data)   
+
+            #season_count = season_element(driver, xpath_data)                  ##['winter','spring','summer','fall','day','night'] error
+
+            #top_note, mid_note, base_note = note_element(driver, xpath_data)
+
+            #longevity = property_element(driver, xpath_data, "LONGEVITY")       ##0~5 error
+
+            #sillage = property_element(driver, xpath_data, "SILLAGE")           ##0~4 error
+
+            #gender = property_element(driver, xpath_data, "GENDER")             ##f~m error
+
+            #price_value = property_element(driver, xpath_data, "PRICE VALUE")   ##0~5 error
+
+            #perfumer = perfumer_finder(driver,xpath_data)
+
+            if img_url == None:
+                failed_fragrance.append(url)
+                img_url = ""
+            
+        except Exception:
+            failed_fragrance.append(url)
+            img_url = ""
+
+      
+        write_data.iloc[i,0] = img_url
+        
+        if i%200 == 0:
+            write_data.to_csv('/home/dhkim/Fragrance/data/DB_img_url1.csv')
+            failed = pd.DataFrame(failed_fragrance)
+            failed.to_csv('/home/dhkim/Fragrance/failed_img_url1.csv')
+
+        if driver:    
+            driver.quit()
+
+
+
+    return write_data, failed_fragrance_list
+
 if __name__ =="__main__":
 
     vdisplay = Xvfb(width=1920, height=1080)
@@ -272,8 +332,14 @@ if __name__ =="__main__":
 
         
         xpath_data = json.load(f)
-        #data = pd.read_csv('/home/dhkim/Fragrance/data/data.csv')
-        data = None
-        information_crawler(data, xpath_data,chrome_path,chrome_options)
+        data = pd.read_csv('/home/dhkim/Fragrance/data/data_final.csv',encoding='latin_1')
+        data = data.iloc[4203:,:]
+        write_data = pd.DataFrame(index =data.loc[:,'Fragrance'].tolist(), columns = ['img_url'])
+        
+        write_data, failed_list = information_crawler(data, xpath_data,chrome_path, write_data, chrome_options)
+        
+        
+        
+
 
         
