@@ -1,6 +1,7 @@
 {
   "img_url": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[1]/div[1]/div/div/img",
 
+  
   "accord_grid": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[1]/div[2]/div",
   "accord_bar_f": "//*[@id=\"main-content\"]/div[1]/div[1]/div/div[2]/div[1]/div[2]/div/div[",
   "accord_bar_b": "]/div",

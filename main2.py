@@ -244,19 +244,25 @@ def information_crawler(data, xpath_data,chrome_path,write_data,chrome_options):
 
     failed_fragrance =[]
     result = []
+    
     for i in tqdm(list(data.index.values)):
-     
+        
         brand = data.loc[i,'Brand']
         fr_name = data.loc[i,'Fragrance']
         url = data.loc[i,'Url']
- 
+        driver = None
+        count = 0
+        while (driver == None) & (count < 5):
+            try:
+                driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+            except Exception: count = count + 1
         try:
-            driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+            
             driver.get(url)
        
             img_url = img_finder(driver,xpath_data)
     
-            #pdb.set_trace()
+            
             #accord_text, accord_ratio = accord_element(driver, xpath_data)
             
             #rating, rating_count = rating_element(driver, xpath_data)   
@@ -274,7 +280,7 @@ def information_crawler(data, xpath_data,chrome_path,write_data,chrome_options):
             #price_value = property_element(driver, xpath_data, "PRICE VALUE")   ##0~5 error
 
             #perfumer = perfumer_finder(driver,xpath_data)
-
+            #pdb.set_trace()
             if img_url == None:
                 failed_fragrance.append(url)
                 img_url = ""
@@ -283,8 +289,8 @@ def information_crawler(data, xpath_data,chrome_path,write_data,chrome_options):
             failed_fragrance.append(url)
             img_url = ""
 
-      
-        write_data.iloc[i,0] = img_url
+        
+        write_data.iloc[i,2] = img_url
         
         if i%200 == 0:
             write_data.to_csv('/home/dhkim/Fragrance/data/DB_img_url1.csv')
@@ -333,9 +339,9 @@ if __name__ =="__main__":
         
         xpath_data = json.load(f)
         data = pd.read_csv('/home/dhkim/Fragrance/data/data_final.csv',encoding='latin_1')
-        data = data.iloc[4203:,:]
-        write_data = pd.DataFrame(index =data.loc[:,'Fragrance'].tolist(), columns = ['img_url'])
-        
+        data = data.iloc[4603:,:]
+        write_data = pd.read_csv('/home/dhkim/Fragrance/data/DB_img_url.csv',encoding='latin_1')
+        write_data = write_data.iloc[:,:3]
         write_data, failed_list = information_crawler(data, xpath_data,chrome_path, write_data, chrome_options)
         
         
