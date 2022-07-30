@@ -40,45 +40,63 @@ from selenium_stealth import stealth
 import nest_asyncio
 nest_asyncio.apply()
 import asyncio
+from playwright.sync_api import sync_playwright
 from playwright.async_api import async_playwright
 from playwright_stealth import stealth_async
 
-async def accord_element(url,xpath_data):
+
+
+def img_finder(page, xpath_data):
+
+    try:
+        if page.is_enabled(selector = 'xpath=' + xpath_data['img_url'], timeout = 30) == True:
+            img_url = page.locator('xpath=' + xpath_data['img_url']).get_attribute('src')
+            return img_url  
+
+    except Exception:
+        return None
+
+
+def accord_element(page, url,xpath_data):
     text = []
     ratio = []
-    browser, page = await get_browser(url, xpath_data)
     p = re.compile('(?<=width: ).*')
-    if browser:
-
-            grid  = await page.is_enabled(selector = 'xpath=' + xpath_data['accord_grid'], timeout = 30)
-
-            if grid: 
-                num = len(grid.find_elements(by = By.CLASS_NAME, value = 'accord-bar'))
-
-                for i in range(1,num+1):
-                    try:
-                        xpath_f = xpath_data['accord_bar_f']
-                        xpath_b = xpath_data['accord_bar_b']
-                        xpath = 'xpath=' + xpath_f + str(i) + xpath_b
-                        
-                        accord = driver.find_element(by = By.XPATH, value = xpath)
-                        accord_text = accord.get_attribute("textContent")
-                        accord_score = accord.get_attribute("style")
-                        accord_score = p.findall(accord_score)[0].strip(';').strip('%')
-                        
-                        text.append(accord_text)
-                        ratio.append(accord_score)
+    try:
+        pdb.set_trace()
+        if page.is_enabled(selector = 'xpath=' + xpath_data['accord_grid'], timeout = 30) == True:
+            pdb.set_trace()
             
-                    except Exception as e:
-                        continue
+            grid = page.locator('xpath=' + xpath_data['accord_grid'])
+            
+            a = page.locator("cell accord-box")
+            a = a.all_text_contents()
+            num = len(grid.find_elements(by = By.CLASS_NAME, value = 'accord-bar'))
+
+            for i in range(1,num+1):
+                try:
+                    xpath_f = xpath_data['accord_bar_f']
+                    xpath_b = xpath_data['accord_bar_b']
+                    xpath = 'xpath=' + xpath_f + str(i) + xpath_b
+                    
+                    accord = driver.find_element(by = By.XPATH, value = xpath)
+                    accord_text = accord.get_attribute("textContent")
+                    accord_score = accord.get_attribute("style")
+                    accord_score = p.findall(accord_score)[0].strip(';').strip('%')
+                    
+                    text.append(accord_text)
+                    ratio.append(accord_score)
+        
+                except Exception as e:
+                    continue
                         
-                browser.close()
-                return text, ratio
-            else:
+            browser.close()
+            return text, ratio
+        else:
                 print('---------Time Out-------------')
                 browser.close()
                 return None, None
-    else: return None, None
+
+    except Exception: return None, None
     
     
 
@@ -260,19 +278,7 @@ def property_score(driver,xpath_data, grid_path, property_index, num):
             continue
     return count
     
-def img_finder(url,xpath_data):
-    driver = get_driver()
 
-    try:
-        driver.get(url)
-        WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH, xpath_data['img_url'])))
-        img_url = driver.find_element(by = By.XPATH, value = xpath_data['img_url'])
-        img_url = img_url.get_attribute('src')
-        driver.close()
-        return img_url  
-    except Exception:
-        driver.close()
-        return None
 
 def perfumer_finder(driver,xpath_data):
     try:
@@ -290,47 +296,42 @@ def kill_process(name):
     except Exception:
         return
 
-async def get_browser(url, xpath_data):
-    async with async_playwright() as p:
-        browser = None
-        count = 0   
-        for browser_type in [p.chromium]:
-            while (browser == None) and (count < 10):
-                    try:
-                        browser = await browser_type.launch()
+def get_browser(playwright, url, xpath_data):
 
-                        if browser.is_connected() == True: 
-                            pdb.set_trace()
-                            page = await browser.new_page()
-                            await stealth_async(page)
-                            await page.goto(url)
-                            await page.screenshot(path = f'home/dhkim{url}.png')
-                        else: browser = None
-                    except Exception:
-                        count = count + 1
-                        if browser: browser.close()
-                        continue
+    browser = None
+    count = 0   
+    while (browser == None) and (count < 10):
+            try:
+                pixel_2 = playwright.devices['Pixel 2']
+                browser = playwright.chromium.launch( args = ["--start-maximized"], headless=False)
+                context = browser.new_context(**pixel_2)
+
+                if browser.is_connected() == True: 
+                    page = browser.new_page()
+                    stealth_async(page)
+                    page.goto(url)
+                    page.screenshot(path = f'home/dhkim{url}.png')
+                else: browser = None
+            except Exception:
+                count = count + 1
+                if browser: browser.close()
+                continue
     time.sleep(random.randrange(1,5))
     return page, browser
 
 
-async def get_woker(datas):
-    result = await asyncio.gather(
-        information_crawler(datas[0]),information_crawler(datas[5]),
-        information_crawler(datas[1]),information_crawler(datas[6]),
-        information_crawler(datas[2]),information_crawler(datas[7]),
-        information_crawler(datas[3]),information_crawler(datas[8]),
-        information_crawler(datas[4]),information_crawler(datas[9])
-    )
-    return (result)
 
-async def information_crawler(input_args):
+def information_crawler(input_args):
 
     url = input_args[0]
     index = input_args[1]
     xpath_data = input_args[2]
 
-    accord_text, accord_ratio = await accord_element(url, xpath_data)
+    with sync_playwright() as playwright:
+        page, browser = get_browser(playwright, url, xpath_data)
+        img_url = img_finder(page, xpath_data) #1
+
+        accord_text, accord_ratio = accord_element(page, url, xpath_data)
     
 
 
@@ -393,8 +394,7 @@ if __name__ =="__main__":
                 datas.append(tmp)
                 del tmp
 
-            asyncio.run(get_woker(datas))
-
+            information_crawler(datas[0])
             vdisplay.stop()
             kill_process('chrome')
             kill_process('chromedriver')

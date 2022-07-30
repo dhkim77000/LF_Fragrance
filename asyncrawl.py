@@ -46,7 +46,9 @@ def accord_element(url,xpath_data, chrome_options, PROXY):
     driver = get_driver(chrome_options, url, PROXY)
     p = re.compile('(?<=width: ).*')
     if driver:
-    
+        ob=Screenshot_Clipping.Screenshot()
+        pdb.set_trace()
+        img_url=ob.full_Screenshot(driver, save_path=r'./', image_name= str(random.randrange(1,10)) + '.png')
         try:
             grid = WebDriverWait(driver, 30).until(EC.presence_of_element_located((By.XPATH,xpath_data['accord_grid'])))
             num = len(grid.find_elements(by = By.CLASS_NAME, value = 'accord-bar'))
@@ -86,6 +88,7 @@ def season_element(url, xpath_data):
     driver = get_driver()
     try:
         driver.get(url)
+   
         WebDriverWait(driver, 120).until(EC.presence_of_element_located((By.XPATH,xpath_data['season_grid'])))
         WebDriverWait(driver, 120).until(EC.visibility_of_element_located((By.XPATH, xpath_data['season_grid'])))
         for i in range(1,7):
@@ -293,18 +296,18 @@ def get_driver(chrome_options, url, PROXY):
     while (driver == None) and (count < 10):
             try:
 
-                #webdriver.DesiredCapabilities.CHROME['proxy'] = {"httpProxy": PROXY,
-                #                                                    "ftpProxy": PROXY,
-                #                                                    "sslProxy": PROXY,
-                 #                                                   "proxyType": "MANUAL"}
-                #webdriver.DesiredCapabilities.CHROME["pageLoadStrategy"] = "none" 
+                webdriver.DesiredCapabilities.CHROME['proxy'] = {"httpProxy": PROXY,
+                                                                    "ftpProxy": PROXY,
+                                                                    "sslProxy": PROXY,
+                                                                    "proxyType": "MANUAL"}
+                webdriver.DesiredCapabilities.CHROME["pageLoadStrategy"] = "none" 
 
-                #driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+                driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
                 
-                try:
-                    driver = uc.Chrome(version_main=103, patcher_force_close=True, use_subprocess=True, chrome_options=chrome_options)
-                except Exception:
-                    driver = uc.Chrome(version_main=101, patcher_force_close=True, use_subprocess=True, chrome_options=chrome_options)
+                #try:
+                #    driver = uc.Chrome(version_main=103, patcher_force_close=True, use_subprocess=True, chrome_options=chrome_options)
+                #except Exception:
+                #    driver = uc.Chrome(version_main=101, patcher_force_close=True, use_subprocess=True, chrome_options=chrome_options)
                 stealth(driver,
                 languages=["en-US", "en"],
                 vendor="Google Inc.",
@@ -326,10 +329,7 @@ def get_driver(chrome_options, url, PROXY):
             connect = True
         except Exception:
             continue
-    
-    ob=Screenshot_Clipping.Screenshot()
-    pdb.set_trace()
-    img_url=ob.full_Screenshot(driver, save_path=r'./', image_name= str(random.randrange(1,10)) + '.png')
+
     return driver
 
 
@@ -378,7 +378,7 @@ if __name__ =="__main__":
 
     #vdisplay = Xvfb(width=1920, height=1080)
     #vdisplay.start()
-    chrome_options =uc.ChromeOptions()
+    chrome_options =webdriver.ChromeOptions()
     #chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
     #chrome_options.add_argument('--incognito')
@@ -394,7 +394,9 @@ if __name__ =="__main__":
         '5.161.105.105:80',
          '67.212.186.102:80']
     
-
+    mobile_emulation = { "deviceName" : "iPhone X" }
+    chrome_options.add_experimental_option("mobileEmulation", mobile_emulation)
+    chrome_options.add_experimental_option("excludeSwitches", ["enable-automation"])
     chrome_options.add_argument('--ignore-certificate-errors')
     chrome_options.add_argument('--allow-running-insecure-content')
     chrome_options.add_argument("--single-process")
